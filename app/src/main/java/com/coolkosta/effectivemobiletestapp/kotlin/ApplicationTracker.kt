@@ -1,4 +1,4 @@
-package com.coolkosta.effectivemobiletestapp.utill.common
+package com.coolkosta.effectivemobiletestapp.kotlin
 
 import android.util.Log
 import androidx.lifecycle.Lifecycle
