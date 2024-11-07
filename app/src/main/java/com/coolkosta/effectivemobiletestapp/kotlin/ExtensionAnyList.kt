@@ -1,15 +1,14 @@
 package com.coolkosta.effectivemobiletestapp.kotlin
 
-fun List<Any>.getIntList(): List<Int>{
-    val result = mutableListOf<Int>()
+fun List<Any>.getInt(): Int? {
     for (i in this) {
         when (i) {
-            is Int -> result.add(i)
+            is Int -> return i
         }
     }
-    return result
+    return null
 }
 
 object AnyList {
-    val list: List<Any> = listOf(1, "two", "three", false, 5, 0.06, 1.7f, 8, '9', 10)
+    val list: List<Any> = listOf( "two", false, 0.06, 1.7f, '9', 56L, arrayOf(5,6,7), 5 )
 }

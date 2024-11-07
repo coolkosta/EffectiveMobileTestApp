@@ -10,7 +10,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.coolkosta.effectivemobiletestapp.kotlin.AnyList
 import com.coolkosta.effectivemobiletestapp.kotlin.ShakerSortAlgorithm
 import com.coolkosta.effectivemobiletestapp.kotlin.SomeListForShakerAlgorithm
-import com.coolkosta.effectivemobiletestapp.kotlin.getIntList
+import com.coolkosta.effectivemobiletestapp.kotlin.getInt
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,8 +31,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val button = findViewById<Button>(R.id.findIntBtn)
         button.setOnClickListener {
-            val list = AnyList.list.getIntList()
-            Log.d("ActivityListInt", "$list")
+            val int = AnyList.list.getInt()
+            Log.d("ActivityGetInt", "$int")
         }
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
