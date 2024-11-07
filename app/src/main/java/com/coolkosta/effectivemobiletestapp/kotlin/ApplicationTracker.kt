@@ -1,43 +1,37 @@
 package com.coolkosta.effectivemobiletestapp.kotlin
 
 import android.util.Log
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.LifecycleOwner
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
-import java.util.concurrent.Executors
-import java.util.concurrent.ScheduledExecutorService
-import java.util.concurrent.TimeUnit
 
 interface AppStartTimeCacheDelegate {
-    fun setLifeCycle(name: String, lifecycleOwner: LifecycleOwner)
+    fun startLogging(name: String)
+    fun stopLogging()
 }
 
-class AppStartTimeCacheDelegateImpl : AppStartTimeCacheDelegate, LifecycleEventObserver {
-    private var lifecycleOwner: LifecycleOwner? = null
+class AppStartTimeCacheDelegateImpl : AppStartTimeCacheDelegate {
     private lateinit var name: String
     private val dateFormat = SimpleDateFormat("dd-MM-yyyy, HH:mm", Locale.getDefault())
-    private val executor: ScheduledExecutorService = Executors.newSingleThreadScheduledExecutor()
+    private val scope = CoroutineScope(Dispatchers.IO)
 
-    override fun setLifeCycle(name: String, lifecycleOwner: LifecycleOwner) {
+    override fun startLogging(name: String) {
         this.name = name
-        this.lifecycleOwner = lifecycleOwner
-        lifecycleOwner.lifecycle.addObserver(this)
-    }
-
-    override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
-        if (event == Lifecycle.Event.ON_CREATE) {
-            val startTime = System.currentTimeMillis()
-            executor.scheduleWithFixedDelay({
+        scope.launch {
+            while (true) {
+                val startTime = System.currentTimeMillis()
                 val cashedTime = dateFormat.format(startTime)
                 Log.d("AppStartTimeCacheDelegate", "$name started in $cashedTime")
-            }, 0, 3, TimeUnit.SECONDS)
+                delay(3000)
+            }
         }
-        if (event == Lifecycle.Event.ON_DESTROY) {
-            lifecycleOwner?.lifecycle?.removeObserver(this)
-            lifecycleOwner = null
-            executor.shutdown()
-        }
+    }
+
+    override fun stopLogging() {
+        scope.cancel()
     }
 }
